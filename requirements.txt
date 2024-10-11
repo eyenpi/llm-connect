@@ -1,0 +1,11 @@
+Flask                  
+Flask-JWT-Extended     
+SQLAlchemy            
+psycopg2-binary            
+openai                
+python-dotenv          
+alembic           
+gunicorn              
+flask-cors         
+alembic
+flask_swagger_ui
