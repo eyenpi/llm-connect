@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, make_response
 from sqlalchemy.orm import Session
 from app.src.db import get_db
 from app.models.user import User
@@ -74,21 +74,36 @@ def register() -> Dict[str, Any]:
 
 @app.route("/login", methods=["POST"])
 def login() -> Dict[str, Any]:
-    data = request.get_json()
-    if not data:
-        logger.warning("Empty JSON request body")
-        return jsonify({"error": "Request body must be JSON"}), HTTPStatus.BAD_REQUEST
+    email = request.form.get("email")
+    password = request.form.get("password")
 
-    email = data.get("email")
-    password = data.get("password")
+    if not email or not password:
+        logger.warning("Missing email or password in form data")
+        return (
+            jsonify({"error": "Email and password are required"}),
+            HTTPStatus.BAD_REQUEST,
+        )
 
     user = authenticate_user(email, password)
     if user:
         token = generate_token(user.id)
         logger.info(f"User logged in: {email}")
-        return jsonify({"token": token}), HTTPStatus.OK
 
-    logger.warning("Invalid login attempt")
+        response = make_response(
+            jsonify({"message": "Login successful"}), HTTPStatus.OK
+        )
+
+        response.set_cookie(
+            key="token",
+            value=token,
+            httponly=True,
+            secure=False,  # TODO: Set to True in production
+            samesite="Lax",
+        )
+
+        return response
+
+    logger.warning("Invalid login attempt for email: {email}")
     return jsonify({"error": "Invalid credentials"}), HTTPStatus.UNAUTHORIZED
 
 
