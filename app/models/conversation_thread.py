@@ -1,20 +1,24 @@
-import datetime
+from datetime import datetime, timezone
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from app.src.db import Base
+from typing import Optional
 
 
 class ConversationThread(Base):
     __tablename__ = "conversation_threads"
 
-    id = Column(Integer, primary_key=True)
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    thread_id = Column(String(120), unique=True, nullable=False)
-    created_at = Column(DateTime, default=datetime.datetime.now(datetime.timezone.utc))
-    assistant_id = Column(String(120), nullable=True)
-    status = Column(String(50), default="active")
+    id: int = Column(Integer, primary_key=True)
+    user_id: int = Column(Integer, ForeignKey("users.id"), nullable=False)
+    thread_id: str = Column(String(120), unique=True, nullable=False)
+    created_at: datetime = Column(DateTime, default=lambda: datetime.now(timezone.utc))
+    assistant_id: Optional[str] = Column(String(120), nullable=True)
+    status: str = Column(String(50), default="active")
 
     user = relationship("User", back_populates="threads")
 
-    def __repr__(self):
-        return f"<ConversationThread {self.thread_id} for User {self.user_id}>"
+    def __repr__(self) -> str:
+        """Provides a string representation of the ConversationThread object."""
+        return (
+            f"<ConversationThread(thread_id={self.thread_id}, user_id={self.user_id})>"
+        )
