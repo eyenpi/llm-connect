@@ -249,7 +249,7 @@ def get_conversation_messages(
         # Fetch the thread messages from OpenAI
         messages = openai_client.get_thread_messages(conversation.thread_id)
 
-        if not messages:
+        if not messages and not isinstance(messages, list):
             logger.error("Error fetching conversation messages")
             return (
                 jsonify(
@@ -336,3 +336,5 @@ def index() -> str:
 
 if __name__ == "__main__":
     app.run(debug=True)
+    # fapp = ChatApp()
+    # fapp.run()

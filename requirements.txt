@@ -8,4 +8,4 @@ alembic
 gunicorn              
 flask-cors         
 alembic
-flask_swagger_ui
+streamlit
