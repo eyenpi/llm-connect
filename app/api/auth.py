@@ -12,7 +12,7 @@ from typing import Callable, Any, Optional, Dict
 load_dotenv()
 
 # Ensure the SECRET_KEY is properly loaded
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = os.getenv("JWT_SECRET")
 if not SECRET_KEY:
     raise ValueError("No SECRET_KEY set for Flask application.")
 
@@ -32,14 +32,11 @@ def token_required(f: Callable) -> Callable:
 
     @wraps(f)
     def decorated(*args: Any, **kwargs: Any) -> Any:
-        token: Optional[str] = request.headers.get("Authorization")
+        token: Optional[str] = request.cookies.get("token")
         if not token:
             return jsonify({"error": "Token is missing!"}), 401
 
         try:
-            if token.startswith("Bearer "):
-                token = token.split()[1]
-
             data: Dict[str, Any] = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
             user_id: str = data["user_id"]
 
