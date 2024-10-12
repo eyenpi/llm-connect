@@ -5,6 +5,9 @@ This is a personal project to create a multi-user system that interacts with ope
 
 This is a multi-user backend application where users can log in, view and manage conversations, and interact with language models! The frontend is built using Streamlit, and the backend is powered by Flask with a PostgreSQL database. Plus, we’ve got Alembic in the mix to handle all your database migrations. 🧙‍♂️
 
+<img width="600" alt="image" src="https://github.com/user-attachments/assets/8a3b3d04-8fe4-493d-a424-714bd8f1232f">
+
+
 ## 🛠 Tech Stack
 
 - Backend: **Flask** 🧪
